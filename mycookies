@@ -1,0 +1,69 @@
+#!/usr/bin/env python
+from __future__ import print_function
+import sqlite3
+import sys
+import argparse
+from Crypto.Cipher import AES
+from Crypto.Protocol.KDF import PBKDF2
+import secretstorage
+
+
+def keyring_get_chrome_password():
+    # https://secretstorage.readthedocs.io/
+    bus = secretstorage.dbus_init()
+    collection = secretstorage.get_default_collection(bus)
+    for item in collection.get_all_items():
+        if item.get_label() == 'Chrome Safe Storage':
+            return item.get_secret()
+    raise Exception('Chrome password not found in gnome keyring!')
+
+
+def decrypt_cookie(name, encrypted_value, chrome_password):
+    # based on https://stackoverflow.com/questions/23153159/decrypting-chromium-cookies
+
+    # Trim off the 'v10' that Chrome/ium prepends
+    assert encrypted_value[:3] in (b'v10', b'v11'), encrypted_value[:3]
+    encrypted_value = encrypted_value[3:]
+
+    # Default values used by both Chrome and Chromium in OSX and Linux
+    salt = b'saltysalt'
+    iv = b' ' * 16
+    length = 16
+
+    # 1003 on Mac, 1 on Linux
+    iterations = 1  # 1003
+
+    key = PBKDF2(chrome_password, salt, length, iterations)
+    cipher = AES.new(key, AES.MODE_CBC, IV=iv)
+
+    value = cipher.decrypt(encrypted_value)
+
+    # remove padding (last byte is the length of padding):
+    padding_length = value[-1]
+    value = value[:-padding_length]
+
+    return value.decode('utf8')
+
+
+def get_chrome_cookies(hostname):
+    r = []
+    chrome_password = keyring_get_chrome_password()
+    db = sqlite3.connect('/home/ski/.config/google-chrome/Default/Cookies')
+    c = db.cursor()
+    c.execute('select name, encrypted_value from cookies where host_key = ?', [hostname])
+    for (name, encrypted_value, ) in c.fetchall():
+        r.append((name, decrypt_cookie(name, encrypted_value, chrome_password)))
+    return r
+
+
+def as_header(cookies):
+    return 'Cookie: ' + ';'.join([
+        '{}={}'.format(name, val) for name, val in cookies
+    ])
+
+
+if __name__ == '__main__':
+    argp = argparse.ArgumentParser()
+    argp.add_argument('hostname')
+    hostname = argp.parse_args().hostname
+    print(as_header(get_chrome_cookies(hostname)))

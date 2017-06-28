@@ -1,0 +1,17 @@
+#!/usr/bin/env python
+from __future__ import print_function
+from lxml import html, etree
+import sys
+import argparse
+
+if __name__ == '__main__':
+    argp = argparse.ArgumentParser()
+    argp.add_argument('-t', '--text-only', help='Return only text', action='store_true')
+    argp.add_argument('query')
+    args = argp.parse_args()
+    inp = html.fromstring(sys.stdin.read())
+    result = inp.cssselect(args.query)
+    if args.text_only:
+        print('\n'.join(r.text.strip() for r in result if r.text))
+    else:
+        print(etree.tostring(result))
