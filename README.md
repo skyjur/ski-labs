@@ -1,6 +1,6 @@
 # Repository for quick experimental tools
 
-- [``mycookies <hostname>``](blob/master/mycookies)
+- [``mycookies <hostname>``](mycookies)
 
   Gets cookies from Chrome storage for a given hostname. For example use with curl to retrieve a file from private repository:
   
@@ -8,7 +8,7 @@
   $ curl -H `mycookies github.com` http://github.com/Username/MyPrivateRepo/blob/...
   ```
 
-- [``csssel <query>``](blob/master/cssselect.py)
+- [``csssel <query>``](csssel)
 
   Filter html based on css selector
 
