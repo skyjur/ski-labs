@@ -29,3 +29,12 @@
   ```
   $ github-browse README.md
   <opens Chrome window pointing to https://github.com/skyjur/utils/blob/master/README.md>
+
+- [``nextversion <version>``](nextversion)
+
+  Generate next release number
+
+  ```
+  $ nextversion 1.0
+  1.1
+  ```
