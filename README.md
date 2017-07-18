@@ -1,6 +1,6 @@
 # Repository for quick experimental tools
 
-- (mycookies <hostname>)[mycookies]
+- [``mycookies <hostname>``](mycookies)
 
   Load cookies from Chrome storage for a given hostname. Can be used with curl or wget to load things from internet using credentials of
   my Chrome browser:
@@ -9,7 +9,7 @@
   $ curl -H `mycookies github.com` http://github.com/Username/MyPrivateRepo/blob/...
   ```
 
-- (cssselect.py <query>)[cssselect.py]
+- [``csssel <query>``](csssel)
 
   Filter html based on css selector
 
