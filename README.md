@@ -22,7 +22,7 @@
   ...
   ```
 
-- (github-browse <filename>)[github-browse]
+- [``github-browse <filename>``](github-browse)
 
   Open a file in a git repository tree on github.
 
