@@ -2,7 +2,8 @@
 
 - (mycookies <hostname>)[mycookies]
 
-  Gets cookies from Chrome storage for a given hostname. For example use with curl to retrieve a file from private repository:
+  Load cookies from Chrome storage for a given hostname. Can be used with curl or wget to load things from internet using credentials of
+  my Chrome browser:
   
   ```
   $ curl -H `mycookies github.com` http://github.com/Username/MyPrivateRepo/blob/...
@@ -16,4 +17,15 @@
 
   ```
   $ curl https://www.bbc.co.uk | csssel -t '.top-story__title
+  Guilt 'eats up' brothers of murder victim Sarah Payne
+  England take on South Africa in World Cup semi-final
+  ...
   ```
+
+- (github-browse <filename>)[github-browse]
+
+  Open a file in a git repository tree on github.
+
+  ```
+  $ github-browse README.md
+  <opens Chrome window pointing to https://github.com/skyjur/utils/blob/master/README.md>

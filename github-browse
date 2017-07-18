@@ -1,0 +1,8 @@
+#!/bin/sh
+cd $(dirname $@)
+GIT_PATH=$(git ls-tree --full-name --name-only HEAD $(basename $@))
+PROJECT=$(git ls-remote --get-url | sed -r 's/git@github.com:(.*).git/\1/g')
+BRANCH=$(git branch | grep '^*' | sed 's/* //g')
+URL=https://github.com/$PROJECT/blob/$BRANCH/$GIT_PATH
+echo $URL
+chromium-browser $URL
