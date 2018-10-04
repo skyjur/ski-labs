@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+for file in *.jpg; do
+    folder=$(stat -c "%y" $file | grep -oE '^[0-9]{4}-[0-9]{2}-[0-9]{2}')
+    
+    if [ ! -d "$folder" ]; then
+        mkdir -p "$folder"
+        echo "Creating folder $folder"
+    fi
+    echo "moving file $file to $folder/$file"
+    mv "$file" "$folder/$file"
+done
